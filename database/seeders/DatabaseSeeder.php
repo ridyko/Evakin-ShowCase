@@ -13,10 +13,25 @@ use App\Models\EvaluasiBulanan;
 use App\Models\EvaluasiHasilKerja;
 use App\Models\EvaluasiPerilaku;
 
+use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
+
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Clear settings cache
+        Cache::forget('system_settings');
+
+        // ==========================================
+        // 0. SYSTEM SETTINGS
+        // ==========================================
+        Setting::create(['key' => 'app_name', 'value' => 'E-Kinerja Pemerintah Daerah Konoha']);
+        Setting::create(['key' => 'organization_name', 'value' => 'Pemerintah Daerah Konoha']);
+        Setting::create(['key' => 'organization_slogan', 'value' => 'Sistem Evaluasi Kinerja Pegawai']);
+        Setting::create(['key' => 'app_logo', 'value' => 'assets/img/logo_konoha.png']);
+        Setting::create(['key' => 'organization_footer', 'value' => '© 2024 E-Kinerja Pemerintah Daerah Konoha. All rights reserved.']);
+
         // ==========================================
         // 1. JABATAN (Positions)
         // ==========================================
