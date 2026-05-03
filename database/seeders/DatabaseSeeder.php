@@ -9,6 +9,9 @@ use App\Models\Jabatan;
 use App\Models\Pegawai;
 use App\Models\PejabatPenilai;
 use App\Models\IndikatorKinerja;
+use App\Models\EvaluasiBulanan;
+use App\Models\EvaluasiHasilKerja;
+use App\Models\EvaluasiPerilaku;
 
 class DatabaseSeeder extends Seeder
 {
@@ -59,7 +62,7 @@ class DatabaseSeeder extends Seeder
             'Jumlah rekapitulasi penyiapan dan pengelolaan bahan serta alat praktik laboratorium pada satuan pendidikan',
             'Jumlah rekapitulasi perawatan dan pemeliharaan alat-alat laboratorium pada satuan pendidikan',
             'Jumlah rekapitulasi perbantuan pelaksanaan kegiatan praktikum peserta didik pada satuan pendidikan',
-            'Jumlah rekapitulasi inventarisasi bahan dan alat laboratorium pada satuan pendidikan',
+            'Jumlah rekapitulasi inventarisasi bahan and alat laboratorium pada satuan pendidikan',
             'Jumlah rekapitulasi penerapan keselamatan dan kesehatan kerja (K3) di laboratorium pada satuan pendidikan',
         ];
 
@@ -119,6 +122,7 @@ class DatabaseSeeder extends Seeder
             ['nama' => 'Shino Aburame', 'ni_pppk' => '199412122024211012', 'pangkat_gol' => 'IX', 'jabatan_id' => $pustakawan->id, 'email' => 'shino@konoha.test'],
         ];
 
+        $allPegawai = [];
         foreach ($pegawaiData as $data) {
             $pegawai = Pegawai::create([
                 'nama' => $data['nama'],
@@ -127,6 +131,7 @@ class DatabaseSeeder extends Seeder
                 'jabatan_id' => $data['jabatan_id'],
                 'unit_kerja' => 'Pemerintah Daerah Konoha',
             ]);
+            $allPegawai[] = $pegawai;
 
             // Auto-create user account (password = NI PPPK)
             User::create([
@@ -158,5 +163,52 @@ class DatabaseSeeder extends Seeder
             'role' => 'penilai',
             'pejabat_penilai_id' => $penilai->id,
         ]);
+
+        // ==========================================
+        // 6. DUMMY EVALUATIONS (Months 1-4)
+        // ==========================================
+        $tahun = date('Y');
+        $selectedPegawai = array_slice($allPegawai, 0, 3); // Naruto, Sasuke, Sakura
+
+        foreach ($selectedPegawai as $pegawai) {
+            for ($bulan = 1; $bulan <= 4; $bulan++) {
+                $evaluasi = EvaluasiBulanan::create([
+                    'pegawai_id' => $pegawai->id,
+                    'pejabat_penilai_id' => $penilai->id,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                    'status' => 'final',
+                    'tanggal_evaluasi' => now()->subMonths(4 - $bulan),
+                ]);
+
+                // Create Hasil Kerja
+                $indikators = IndikatorKinerja::where('jabatan_id', $pegawai->jabatan_id)->get();
+                foreach ($indikators as $ind) {
+                    EvaluasiHasilKerja::create([
+                        'evaluasi_bulanan_id' => $evaluasi->id,
+                        'indikator_kinerja_id' => $ind->id,
+                        'target_bulan' => 1,
+                        'realisasi' => 1,
+                        'capaian' => 100,
+                    ]);
+                }
+
+                // Create Perilaku
+                foreach (EvaluasiPerilaku::daftarAspek() as $aspek) {
+                    EvaluasiPerilaku::create([
+                        'evaluasi_bulanan_id' => $evaluasi->id,
+                        'aspek_perilaku' => $aspek,
+                        'pengkategorian' => 'Sesuai Ekspektasi',
+                        'nilai' => 2,
+                    ]);
+                }
+
+                // Update summary totals
+                $evaluasi->update([
+                    'capaian_hasil_kerja' => $evaluasi->hitungCapaianHasilKerja(),
+                    'capaian_perilaku_kerja' => $evaluasi->hitungCapaianPerilaku(),
+                ]);
+            }
+        }
     }
 }
