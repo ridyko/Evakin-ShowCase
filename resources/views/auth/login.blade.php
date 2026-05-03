@@ -271,10 +271,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0.75rem;
+            padding: 0.75rem 1rem;
             background: rgba(15, 23, 42, 0.3);
-            border-radius: 8px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
             font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .demo-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .demo-item:active {
+            transform: translateY(0);
         }
 
         .demo-label {
@@ -346,15 +359,15 @@
         <div class="demo-accounts">
             <h2>Akun Uji Coba</h2>
             <div class="demo-grid">
-                <div class="demo-item">
+                <div class="demo-item" onclick="fillLogin('admin@konoha.test', 'password')">
                     <span class="demo-label">Admin:</span>
                     <span class="demo-value">admin@konoha.test / password</span>
                 </div>
-                <div class="demo-item">
+                <div class="demo-item" onclick="fillLogin('pejabat@konoha.test', 'password')">
                     <span class="demo-label">Penilai:</span>
                     <span class="demo-value">pejabat@konoha.test / password</span>
                 </div>
-                <div class="demo-item">
+                <div class="demo-item" onclick="fillLogin('naruto@konoha.test', '199001012024211001')">
                     <span class="demo-label">Pegawai:</span>
                     <span class="demo-value">naruto@konoha.test / 199001012024211001</span>
                 </div>
@@ -365,5 +378,35 @@
             &copy; {{ date('Y') }} E-Kinerja Pemerintah Daerah Konoha. All rights reserved.
         </div>
     </div>
+
+    <script>
+        function fillLogin(email, password) {
+            const emailInput = document.getElementById('emailInput');
+            const passwordInput = document.getElementById('passwordInput');
+            
+            // Add a subtle animation when filling
+            emailInput.style.transition = 'all 0.3s ease';
+            passwordInput.style.transition = 'all 0.3s ease';
+            
+            emailInput.value = email;
+            passwordInput.value = password;
+            
+            // Highlight the inputs briefly
+            emailInput.style.borderColor = '#6366f1';
+            passwordInput.style.borderColor = '#6366f1';
+            emailInput.style.boxShadow = '0 0 0 4px rgba(99, 102, 241, 0.2)';
+            passwordInput.style.boxShadow = '0 0 0 4px rgba(99, 102, 241, 0.2)';
+            
+            setTimeout(() => {
+                emailInput.style.borderColor = '';
+                passwordInput.style.borderColor = '';
+                emailInput.style.boxShadow = '';
+                passwordInput.style.boxShadow = '';
+            }, 600);
+
+            // Trigger focus on email
+            emailInput.focus();
+        }
+    </script>
 </body>
 </html>
