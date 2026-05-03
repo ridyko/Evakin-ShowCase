@@ -255,10 +255,26 @@
             font-size: 0.85rem;
             font-weight: 700;
             color: #94a3b8;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             text-align: center;
+        }
+
+        .demo-warning {
+            font-size: 0.7rem;
+            color: #f87171;
+            text-align: center;
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .demo-warning i {
+            font-size: 0.8rem;
         }
 
         .demo-grid {
@@ -358,6 +374,10 @@
 
         <div class="demo-accounts">
             <h2>Akun Uji Coba</h2>
+            <div class="demo-warning">
+                <i class="fas fa-history"></i>
+                <span>Data yang Anda ubah akan otomatis direset ke pengaturan awal setiap pukul 23:00 WIB.</span>
+            </div>
             <div class="demo-grid">
                 <div class="demo-item" onclick="fillLogin('admin@konoha.test', 'password')">
                     <span class="demo-label">Admin:</span>
