@@ -94,66 +94,29 @@ class DatabaseSeeder extends Seeder
         // 3. PEJABAT PENILAI
         // ==========================================
         $penilai = PejabatPenilai::create([
-            'nama' => 'Drs. Heru Susanto, M.Pd',
+            'nama' => 'Drs. Kakashi Hatake, M.Si',
             'nip' => '197501012000011001',
             'pangkat_gol' => 'Pembina (IV/A)',
             'jabatan' => 'Kepala Sub Bagian Tata Usaha',
-            'unit_kerja' => config('app.organization_name'),
+            'unit_kerja' => 'Pemerintah Daerah Konoha',
         ]);
 
         // ==========================================
-        // 4. PEGAWAI (7 orang) + AUTO-CREATE USER ACCOUNTS
+        // 4. PEGAWAI (12 orang) + AUTO-CREATE USER ACCOUNTS
         // ==========================================
         $pegawaiData = [
-            [
-                'nama' => 'Budi Santoso',
-                'ni_pppk' => '199001012024211001',
-                'pangkat_gol' => 'IX',
-                'jabatan_id' => $administrasi->id,
-                'email' => 'budi@example.test',
-            ],
-            [
-                'nama' => 'Siti Aminah',
-                'ni_pppk' => '199202022024212002',
-                'pangkat_gol' => 'IX',
-                'jabatan_id' => $pustakawan->id,
-                'email' => 'siti@example.test',
-            ],
-            [
-                'nama' => 'Andi Wijaya',
-                'ni_pppk' => '198503032024211003',
-                'pangkat_gol' => 'IX',
-                'jabatan_id' => $administrasi->id,
-                'email' => 'andi@example.test',
-            ],
-            [
-                'nama' => 'Dewi Lestari',
-                'ni_pppk' => '199504042024212004',
-                'pangkat_gol' => 'IX',
-                'jabatan_id' => $administrasi->id,
-                'email' => 'dewi@example.test',
-            ],
-            [
-                'nama' => 'Eko Prasetyo',
-                'ni_pppk' => '198805052024211005',
-                'pangkat_gol' => 'IX',
-                'jabatan_id' => $administrasi->id,
-                'email' => 'eko@example.test',
-            ],
-            [
-                'nama' => 'Rina Kartika',
-                'ni_pppk' => '199306062024212006',
-                'pangkat_gol' => 'IX',
-                'jabatan_id' => $laboran->id,
-                'email' => 'rina@example.test',
-            ],
-            [
-                'nama' => 'Fajar Ramadhan',
-                'ni_pppk' => '199107072024211007',
-                'pangkat_gol' => 'IX',
-                'jabatan_id' => $administrasi->id,
-                'email' => 'fajar@example.test',
-            ],
+            ['nama' => 'Naruto Uzumaki', 'ni_pppk' => '199001012024211001', 'pangkat_gol' => 'IX', 'jabatan_id' => $administrasi->id, 'email' => 'naruto@konoha.test'],
+            ['nama' => 'Sasuke Uchiha', 'ni_pppk' => '199202022024212002', 'pangkat_gol' => 'IX', 'jabatan_id' => $pustakawan->id, 'email' => 'sasuke@konoha.test'],
+            ['nama' => 'Sakura Haruno', 'ni_pppk' => '198503032024211003', 'pangkat_gol' => 'IX', 'jabatan_id' => $administrasi->id, 'email' => 'sakura@konoha.test'],
+            ['nama' => 'Shikamaru Nara', 'ni_pppk' => '199504042024212004', 'pangkat_gol' => 'IX', 'jabatan_id' => $administrasi->id, 'email' => 'shikamaru@konoha.test'],
+            ['nama' => 'Hinata Hyuga', 'ni_pppk' => '198805052024211005', 'pangkat_gol' => 'IX', 'jabatan_id' => $administrasi->id, 'email' => 'hinata@konoha.test'],
+            ['nama' => 'Rock Lee', 'ni_pppk' => '199306062024212006', 'pangkat_gol' => 'IX', 'jabatan_id' => $laboran->id, 'email' => 'lee@konoha.test'],
+            ['nama' => 'Neji Hyuga', 'ni_pppk' => '199107072024211007', 'pangkat_gol' => 'IX', 'jabatan_id' => $administrasi->id, 'email' => 'neji@konoha.test'],
+            ['nama' => 'Tenten', 'ni_pppk' => '199108082024212008', 'pangkat_gol' => 'IX', 'jabatan_id' => $pustakawan->id, 'email' => 'tenten@konoha.test'],
+            ['nama' => 'Ino Yamanaka', 'ni_pppk' => '199209092024212009', 'pangkat_gol' => 'IX', 'jabatan_id' => $administrasi->id, 'email' => 'ino@konoha.test'],
+            ['nama' => 'Choji Akimichi', 'ni_pppk' => '199010102024211010', 'pangkat_gol' => 'IX', 'jabatan_id' => $administrasi->id, 'email' => 'choji@konoha.test'],
+            ['nama' => 'Kiba Inuzuka', 'ni_pppk' => '199311112024211011', 'pangkat_gol' => 'IX', 'jabatan_id' => $laboran->id, 'email' => 'kiba@konoha.test'],
+            ['nama' => 'Shino Aburame', 'ni_pppk' => '199412122024211012', 'pangkat_gol' => 'IX', 'jabatan_id' => $pustakawan->id, 'email' => 'shino@konoha.test'],
         ];
 
         foreach ($pegawaiData as $data) {
@@ -162,7 +125,7 @@ class DatabaseSeeder extends Seeder
                 'ni_pppk' => $data['ni_pppk'],
                 'pangkat_gol' => $data['pangkat_gol'],
                 'jabatan_id' => $data['jabatan_id'],
-                'unit_kerja' => config('app.organization_name'),
+                'unit_kerja' => 'Pemerintah Daerah Konoha',
             ]);
 
             // Auto-create user account (password = NI PPPK)
@@ -181,16 +144,16 @@ class DatabaseSeeder extends Seeder
 
         // Admin
         User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@evakin.test',
+            'name' => 'Administrator Konoha',
+            'email' => 'admin@konoha.test',
             'password' => Hash::make('password'),
             'role' => 'admin',
         ]);
 
         // Penilai
         User::create([
-            'name' => 'Drs. Heru Susanto, M.Pd',
-            'email' => 'pejabat@evakin.test',
+            'name' => 'Drs. Kakashi Hatake, M.Si',
+            'email' => 'pejabat@konoha.test',
             'password' => Hash::make('password'),
             'role' => 'penilai',
             'pejabat_penilai_id' => $penilai->id,

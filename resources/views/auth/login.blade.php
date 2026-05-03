@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — E-Kinerja SMKN 2 Jakarta</title>
+    <title>Login — E-Kinerja Pemerintah Daerah Konoha</title>
     <meta name="description" content="Login Sistem Evaluasi Kinerja Bulanan Pegawai PPPK">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -241,6 +241,51 @@
             color: #475569;
             font-size: 0.75rem;
         }
+
+        .demo-accounts {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .demo-accounts h2 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .demo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .demo-label {
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        .demo-value {
+            color: #f1f5f9;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -298,8 +343,26 @@
             </form>
         </div>
 
+        <div class="demo-accounts">
+            <h2>Akun Uji Coba</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Admin:</span>
+                    <span class="demo-value">admin@konoha.test / password</span>
+                </div>
+                <div class="demo-item">
+                    <span class="demo-label">Penilai:</span>
+                    <span class="demo-value">pejabat@konoha.test / password</span>
+                </div>
+                <div class="demo-item">
+                    <span class="demo-label">Pegawai:</span>
+                    <span class="demo-value">naruto@konoha.test / 199001012024211001</span>
+                </div>
+            </div>
+        </div>
+
         <div class="login-footer">
-            &copy; {{ date('Y') }} E-Kinerja SMKN 2 Jakarta. All rights reserved.
+            &copy; {{ date('Y') }} E-Kinerja Pemerintah Daerah Konoha. All rights reserved.
         </div>
     </div>
 </body>
