@@ -46,22 +46,22 @@ class EvaluasiExport
         // Default font
         $this->spreadsheet->getDefaultStyle()->getFont()->setName('Arial')->setSize(9);
 
-        // Define Column Widths to perfectly match the 8-column layout in Gambar 2
-        $this->sheet->getColumnDimension('A')->setWidth(4);   // No
-        $this->sheet->getColumnDimension('B')->setWidth(24);  // Key Label 1 (Pangkat/Gol. Ruang, dll)
-        $this->sheet->getColumnDimension('C')->setWidth(32);  // Value 1 (Rio Widyatmoko, dll)
-        $this->sheet->getColumnDimension('D')->setWidth(15);  // Target tahunan / No penilai
-        $this->sheet->getColumnDimension('E')->setWidth(15);  // Target Bulan / Key Label 2
-        $this->sheet->getColumnDimension('F')->setWidth(15);  // Realisasi / Value 2 part 1
-        $this->sheet->getColumnDimension('G')->setWidth(18);  // Capaian / Perilaku Kategori
-        $this->sheet->getColumnDimension('H')->setWidth(10);  // Capaian / Perilaku Nilai
+        // Define Column Widths to perfectly match the 9-column grid layout in Gambar 2
+        $this->sheet->getColumnDimension('A')->setWidth(4);   // NO
+        $this->sheet->getColumnDimension('B')->setWidth(20);  // Key Pegawai (NAMA, NI PPPK, dll)
+        $this->sheet->getColumnDimension('C')->setWidth(25);  // Value Pegawai part 1
+        $this->sheet->getColumnDimension('D')->setWidth(15);  // Value Pegawai part 2 / Target tahunan
+        $this->sheet->getColumnDimension('E')->setWidth(15);  // NO Penilai / Target Bulan
+        $this->sheet->getColumnDimension('F')->setWidth(20);  // Key Penilai (NAMA, NIP, dll) / Realisasi
+        $this->sheet->getColumnDimension('G')->setWidth(5);   // Separator / Predikat part 1
+        $this->sheet->getColumnDimension('H')->setWidth(20);  // Value Penilai part 1 / Predikat part 2 / Capaian part 1
+        $this->sheet->getColumnDimension('I')->setWidth(10);  // Value Penilai part 2 / Nilai Score / Capaian part 2
 
-        $row = 1;
-        $row = $this->writeHeader($row);
-        $row = $this->writeIdentity($row);
-        $row = $this->writeHasilKerja($row);
-        $row = $this->writePerilaku($row);
-        $this->writeSignature($row);
+        $this->writeHeader();
+        $this->writeIdentity();
+        $this->writeHasilKerja();
+        $this->writePerilaku();
+        $this->writeSignature();
 
         // Save to temp file
         $filename = 'Evaluasi_Kinerja_' . str_replace(' ', '_', $this->evaluasi->pegawai->nama)
@@ -79,47 +79,43 @@ class EvaluasiExport
             . '_' . $this->evaluasi->nama_bulan . '_' . $this->evaluasi->tahun . '.xlsx';
     }
 
-    protected function writeHeader(int $row): int
+    protected function writeHeader(): void
     {
-        $this->sheet->mergeCells("A{$row}:H{$row}");
-        $this->sheet->setCellValue("A{$row}", 'EVALUASI KINERJA BULANAN PEGAWAI');
-        $this->applyStyle("A{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
-        $row++;
+        // Baris 1-3, Merge & Center Kolom A sampai I
+        $this->sheet->mergeCells("A1:I1");
+        $this->sheet->setCellValue("A1", 'EVALUASI KINERJA BULANAN PEGAWAI');
+        $this->applyStyle("A1", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
 
-        $this->sheet->mergeCells("A{$row}:H{$row}");
-        $this->sheet->setCellValue("A{$row}", 'PEGAWAI PEMERINTAH DENGAN PERJANJIAN KERJA PARUH WAKTU');
-        $this->applyStyle("A{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
-        $row++;
+        $this->sheet->mergeCells("A2:I2");
+        $this->sheet->setCellValue("A2", 'PEGAWAI PEMERINTAH DENGAN PERJANJIAN KERJA PARUH WAKTU');
+        $this->applyStyle("A2", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
 
-        $this->sheet->mergeCells("A{$row}:H{$row}");
-        $this->sheet->setCellValue("A{$row}", 'BULAN ' . strtoupper($this->evaluasi->nama_bulan));
-        $this->applyStyle("A{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
-        $row += 2;
-
-        return $row;
+        $this->sheet->mergeCells("A3:I3");
+        $this->sheet->setCellValue("A3", 'BULAN ' . strtoupper($this->evaluasi->nama_bulan));
+        $this->applyStyle("A3", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
     }
 
-    protected function writeIdentity(int $row): int
+    protected function writeIdentity(): void
     {
         $pegawai = $this->evaluasi->pegawai;
         $penilai = $this->evaluasi->pejabatPenilai;
 
-        // Headers matching Gambar 2 (8 Columns Grid)
-        $this->sheet->setCellValue("A{$row}", 'NO');
-        $this->sheet->mergeCells("B{$row}:C{$row}");
-        $this->sheet->setCellValue("B{$row}", 'PEGAWAI YANG DINILAI');
+        // Baris 5: Identity Header
+        $this->sheet->setCellValue("A5", 'NO');
+        $this->sheet->mergeCells("B5:D5");
+        $this->sheet->setCellValue("B5", 'PEGAWAI YANG DINILAI');
         
-        $this->sheet->setCellValue("D{$row}", 'NO');
-        $this->sheet->mergeCells("E{$row}:H{$row}");
-        $this->sheet->setCellValue("E{$row}", 'PEJABAT PENILAI KINERJA');
+        $this->sheet->setCellValue("E5", 'NO');
+        $this->sheet->mergeCells("F5:I5");
+        $this->sheet->setCellValue("F5", 'PEJABAT PENILAI KINERJA');
 
-        $this->applyHeaderStyle("A{$row}:C{$row}");
-        $this->applyHeaderStyle("D{$row}:H{$row}");
-        $row++;
+        $this->applyHeaderStyle("A5:D5");
+        $this->applyHeaderStyle("E5:F5");
+        $this->applyHeaderStyle("H5:I5");
 
         $leftData = [
             ['1', 'NAMA', strtoupper($pegawai->nama)],
-            ['2', 'NI PPPK', $pegawai->ni_pppk],
+            ['2', 'NI PPPK', "'" . $pegawai->ni_pppk],
             ['3', 'PANGKAT/GOL. RUANG', $pegawai->pangkat_gol ?? '-'],
             ['4', 'JABATAN', $pegawai->jabatan->nama_jabatan ?? '-'],
             ['5', 'UNIT KERJA', strtoupper($pegawai->unit_kerja)],
@@ -127,130 +123,144 @@ class EvaluasiExport
 
         $rightData = [
             ['1', 'NAMA', strtoupper($penilai->nama)],
-            ['2', 'NIP', $penilai->nip],
+            ['2', 'NIP', "'" . $penilai->nip],
             ['3', 'PANGKAT/ GOL.RUANG', strtoupper($penilai->pangkat_gol ?? '-')],
             ['4', 'JABATAN', strtoupper($penilai->jabatan ?? '-')],
             ['5', 'UNIT KERJA', strtoupper($penilai->unit_kerja)],
         ];
 
+        // Baris 6-10: Identity Data
         for ($i = 0; $i < 5; $i++) {
-            $r = $row + $i;
+            $r = 6 + $i;
+            
+            // Left Side (Pegawai)
             $this->sheet->setCellValue("A{$r}", $leftData[$i][0]);
             $this->sheet->setCellValue("B{$r}", $leftData[$i][1]);
+            $this->sheet->mergeCells("C{$r}:D{$r}");
             $this->sheet->setCellValue("C{$r}", $leftData[$i][2]);
-            $this->applyBorder("A{$r}:C{$r}");
+            $this->applyBorder("A{$r}:D{$r}");
             $this->applyStyle("A{$r}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
 
-            $this->sheet->setCellValue("D{$r}", $rightData[$i][0]);
-            $this->sheet->setCellValue("E{$r}", $rightData[$i][1]);
-            $this->sheet->mergeCells("F{$r}:H{$r}");
-            $this->sheet->setCellValue("F{$r}", $rightData[$i][2]);
-            $this->applyBorder("D{$r}:H{$r}");
-            $this->applyStyle("D{$r}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
+            // Right Side (Pejabat)
+            $this->sheet->setCellValue("E{$r}", $rightData[$i][0]);
+            $this->sheet->setCellValue("F{$r}", $rightData[$i][1]);
+            $this->sheet->mergeCells("H{$r}:I{$r}");
+            $this->sheet->setCellValue("H{$r}", $rightData[$i][2]);
+            $this->applyBorder("E{$r}:F{$r}");
+            $this->applyBorder("H{$r}:I{$r}");
+            $this->applyStyle("E{$r}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
         }
-
-        $row += 6;
-        return $row;
     }
 
-    protected function writeHasilKerja(int $row): int
+    protected function writeHasilKerja(): void
     {
-        $this->sheet->setCellValue("A{$row}", 'HASIL KERJA');
-        $this->sheet->getStyle("A{$row}")->getFont()->setBold(true);
-        $row++;
+        // Baris 12: "HASIL KERJA" (Bold, di Kolom A)
+        $this->sheet->setCellValue("A12", 'HASIL KERJA');
+        $this->sheet->getStyle("A12")->getFont()->setBold(true);
 
-        // Table Header matching Gambar 2 (8 Columns Grid)
-        $this->sheet->setCellValue("A{$row}", 'No');
-        $this->sheet->mergeCells("B{$row}:C{$row}");
-        $this->sheet->setCellValue("B{$row}", 'Indikator Kinerja Individu');
-        $this->sheet->setCellValue("D{$row}", 'Target tahunan');
-        $this->sheet->setCellValue("E{$row}", 'Target Bulan');
-        $this->sheet->setCellValue("F{$row}", 'Realisasi');
-        $this->sheet->mergeCells("G{$row}:H{$row}");
-        $this->sheet->setCellValue("G{$row}", 'Capaian');
+        // Baris 13 (Header Tabel)
+        $this->sheet->setCellValue("A13", 'No');
+        $this->sheet->mergeCells("B13:D13");
+        $this->sheet->setCellValue("B13", 'Indikator Kinerja Individu');
+        $this->sheet->setCellValue("E13", 'Target tahunan');
+        $this->sheet->setCellValue("F13", 'Target Bulan');
+        $this->sheet->setCellValue("G13", 'Realisasi');
+        $this->sheet->mergeCells("H13:I13");
+        $this->sheet->setCellValue("H13", 'Capaian');
 
-        $this->applyHeaderStyle("A{$row}:H{$row}");
-        $this->applyStyle("A{$row}:H{$row}", [
+        $this->applyHeaderStyle("A13:I13");
+        $this->applyStyle("A13:I13", [
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true]
         ]);
-        $row++;
 
-        foreach ($this->evaluasi->hasilKerja as $i => $hk) {
-            $this->sheet->setCellValue("A{$row}", $i + 1);
-            $this->sheet->mergeCells("B{$row}:C{$row}");
-            $this->sheet->setCellValue("B{$row}", $hk->indikatorKinerja->deskripsi);
+        // Baris 14-18 (Data IKI)
+        $hasilKerja = $this->evaluasi->hasilKerja;
+        for ($i = 0; $i < 5; $i++) {
+            $r = 14 + $i;
+            $hk = $hasilKerja[$i] ?? null;
             
-            $targetStr = $hk->indikatorKinerja->target_tahunan;
-            $this->sheet->setCellValue("D{$row}", $targetStr);
+            $this->sheet->setCellValue("A{$r}", $i + 1);
+            $this->sheet->mergeCells("B{$r}:D{$r}");
             
-            $this->sheet->setCellValue("E{$row}", $hk->target_bulan);
-            $this->sheet->setCellValue("F{$row}", $hk->realisasi);
-            $this->sheet->mergeCells("G{$row}:H{$row}");
-            $this->sheet->setCellValue("G{$row}", number_format($hk->capaian, 0));
+            if ($hk) {
+                $this->sheet->setCellValue("B{$r}", $hk->indikatorKinerja->deskripsi);
+                $this->sheet->setCellValue("E{$r}", $hk->indikatorKinerja->target_tahunan);
+                $this->sheet->setCellValue("F{$r}", $hk->target_bulan);
+                $this->sheet->setCellValue("G{$r}", $hk->realisasi);
+                $this->sheet->mergeCells("H{$r}:I{$r}");
+                $this->sheet->setCellValue("H{$r}", $hk->capaian);
+            } else {
+                $this->sheet->mergeCells("H{$r}:I{$r}");
+            }
 
-            $this->applyBorder("A{$row}:H{$row}");
-            $this->applyStyle("A{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_TOP]]);
-            $this->applyStyle("B{$row}", ['alignment' => ['wrapText' => true, 'vertical' => Alignment::VERTICAL_TOP], 'font' => ['size' => 8]]);
-            $this->applyStyle("D{$row}:H{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_TOP], 'font' => ['size' => 8]]);
-            $row++;
+            $this->applyBorder("A{$r}:I{$r}");
+            $this->applyStyle("A{$r}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_TOP]]);
+            $this->applyStyle("B{$r}", ['alignment' => ['wrapText' => true, 'vertical' => Alignment::VERTICAL_TOP], 'font' => ['size' => 8]]);
+            $this->applyStyle("E{$r}:I{$r}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_TOP], 'font' => ['size' => 8]]);
         }
 
-        // Total Row matching Gambar 2 (A:F and G:H merged)
-        $this->sheet->mergeCells("A{$row}:F{$row}");
-        $this->sheet->setCellValue("A{$row}", 'Capaian Hasil Kerja Bulanan');
-        $this->sheet->mergeCells("G{$row}:H{$row}");
-        $this->sheet->setCellValue("G{$row}", number_format($this->evaluasi->capaian_hasil_kerja, 2, ',', '.'));
-        $this->applyBorder("A{$row}:H{$row}");
-        $this->applyStyle("A{$row}", ['font' => ['bold' => true]]);
-        $this->applyStyle("G{$row}", ['font' => ['bold' => true], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
-        $row += 2;
-
-        return $row;
+        // Baris 19: Capaian Hasil Kerja Bulanan
+        $this->sheet->mergeCells("A19:G19");
+        $this->sheet->setCellValue("A19", 'Capaian Hasil Kerja Bulanan');
+        $this->sheet->mergeCells("H19:I19");
+        $this->sheet->setCellValue("H19", '=AVERAGE(H14:H18)');
+        
+        $this->applyBorder("A19:I19");
+        $this->applyStyle("A19", ['font' => ['bold' => true]]);
+        $this->applyStyle("H19", ['font' => ['bold' => true], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
+        $this->sheet->getStyle("H19")->getNumberFormat()->setFormatCode('0.00');
     }
 
-    protected function writePerilaku(int $row): int
+    protected function writePerilaku(): void
     {
-        // Table Header matching Gambar 2
-        $this->sheet->setCellValue("A{$row}", 'No');
-        $this->sheet->mergeCells("B{$row}:F{$row}");
-        $this->sheet->setCellValue("B{$row}", 'Aspek Perilaku');
-        $this->sheet->mergeCells("G{$row}:H{$row}");
-        $this->sheet->setCellValue("G{$row}", 'Nilai');
+        // Baris 21 (Header)
+        $this->sheet->setCellValue("A21", 'No');
+        $this->sheet->mergeCells("B21:F21");
+        $this->sheet->setCellValue("B21", 'Aspek Perilaku');
+        $this->sheet->mergeCells("G21:I21");
+        $this->sheet->setCellValue("G21", 'Nilai');
 
-        $this->applyHeaderStyle("A{$row}:H{$row}");
-        $this->applyStyle("A{$row}:H{$row}", [
+        $this->applyHeaderStyle("A21:I21");
+        $this->applyStyle("A21:I21", [
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
         ]);
-        $row++;
 
-        foreach ($this->evaluasi->perilaku as $i => $pr) {
-            $this->sheet->setCellValue("A{$row}", $i + 1);
-            $this->sheet->mergeCells("B{$row}:F{$row}");
-            $this->sheet->setCellValue("B{$row}", $pr->aspek_perilaku);
-            $this->sheet->setCellValue("G{$row}", $pr->pengkategorian);
-            $this->sheet->setCellValue("H{$row}", $pr->nilai);
+        // Baris 22-28 (7 Aspek BerAKHLAK)
+        $perilaku = $this->evaluasi->perilaku;
+        for ($i = 0; $i < 7; $i++) {
+            $r = 22 + $i;
+            $pr = $perilaku[$i] ?? null;
 
-            $this->applyBorder("A{$row}:H{$row}");
-            $this->applyStyle("A{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
-            $this->applyStyle("B{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT], 'font' => ['size' => 8]]);
-            $this->applyStyle("G{$row}:H{$row}", ['font' => ['size' => 8], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
-            $row++;
+            $this->sheet->setCellValue("A{$r}", $i + 1);
+            $this->sheet->mergeCells("B{$r}:F{$r}");
+            
+            if ($pr) {
+                $this->sheet->setCellValue("B{$r}", $pr->aspek_perilaku);
+                $this->sheet->mergeCells("G{$r}:H{$r}");
+                $this->sheet->setCellValue("G{$r}", $pr->pengkategorian);
+                $this->sheet->setCellValue("I{$r}", $pr->nilai);
+            } else {
+                $this->sheet->mergeCells("G{$r}:H{$r}");
+            }
+
+            $this->applyBorder("A{$r}:I{$r}");
+            $this->applyStyle("A{$r}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
+            $this->applyStyle("B{$r}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT], 'font' => ['size' => 8]]);
+            $this->applyStyle("G{$r}:I{$r}", ['font' => ['size' => 8], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
         }
 
-        // Total Row matching Gambar 2 (A:F and G:H merged)
-        $this->sheet->mergeCells("A{$row}:F{$row}");
-        $this->sheet->setCellValue("A{$row}", 'Capaian Perilaku Kerja Bulanan');
-        $this->sheet->mergeCells("G{$row}:H{$row}");
-        $this->sheet->setCellValue("G{$row}", number_format($this->evaluasi->capaian_perilaku_kerja, 2, ',', '.'));
-        $this->applyBorder("A{$row}:H{$row}");
-        $this->applyStyle("A{$row}", ['font' => ['bold' => true]]);
-        $this->applyStyle("G{$row}", ['font' => ['bold' => true], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
-        $row += 2;
+        // Baris 29: Capaian Perilaku Kerja Bulanan
+        $this->sheet->mergeCells("A29:H29");
+        $this->sheet->setCellValue("A29", 'Capaian Perilaku Kerja Bulanan');
+        $this->sheet->setCellValue("I29", '=AVERAGE(I22:I28)');
 
-        return $row;
+        $this->applyBorder("A29:I29");
+        $this->applyStyle("A29", ['font' => ['bold' => true]]);
+        $this->applyStyle("I29", ['font' => ['bold' => true], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
+        $this->sheet->getStyle("I29")->getNumberFormat()->setFormatCode('0.00');
     }
 
-    protected function writeSignature(int $row): void
+    protected function writeSignature(): void
     {
         $bulanNames = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
@@ -266,40 +276,37 @@ class EvaluasiExport
             $tanggalText = 'Jakarta, ' . date('d') . ' ' . $bulanNames[(int)date('n')] . ' ' . $this->evaluasi->tahun;
         }
 
-        // Date matching Gambar 2 (F:H merged)
-        $this->sheet->mergeCells("F{$row}:H{$row}");
-        $this->sheet->setCellValue("F{$row}", $tanggalText);
-        $this->applyStyle("F{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
-        $row++;
+        // Baris 31 Kolom H (Merge H31:I31)
+        $this->sheet->mergeCells("H31:I31");
+        $this->sheet->setCellValue("H31", $tanggalText);
+        $this->applyStyle("H31", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
 
-        // Roles matching Gambar 2 (A:C and F:H merged)
-        $this->sheet->mergeCells("A{$row}:C{$row}");
-        $this->sheet->setCellValue("A{$row}", 'Pegawai yang Dinilai');
-        $this->applyStyle("A{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
+        // Baris 32: B32:D32 & H32:I32
+        $this->sheet->mergeCells("B32:D32");
+        $this->sheet->setCellValue("B32", 'Pegawai yang Dinilai');
+        $this->applyStyle("B32", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
 
-        $this->sheet->mergeCells("F{$row}:H{$row}");
-        $this->sheet->setCellValue("F{$row}", 'Pejabat Penilai Kinerja,');
-        $this->applyStyle("F{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
-        $row += 4;
+        $this->sheet->mergeCells("H32:I32");
+        $this->sheet->setCellValue("H32", 'Pejabat Penilai Kinerja,');
+        $this->applyStyle("H32", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
 
-        // Names matching Gambar 2 (A:C and F:H merged)
-        $this->sheet->mergeCells("A{$row}:C{$row}");
-        $this->sheet->setCellValue("A{$row}", $this->evaluasi->pegawai->nama);
-        $this->applyStyle("A{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
+        // Baris 36: B36:D36 & H36:I36
+        $this->sheet->mergeCells("B36:D36");
+        $this->sheet->setCellValue("B36", $this->evaluasi->pegawai->nama);
+        $this->applyStyle("B36", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
 
-        $this->sheet->mergeCells("F{$row}:H{$row}");
-        $this->sheet->setCellValue("F{$row}", $this->evaluasi->pejabatPenilai->nama);
-        $this->applyStyle("F{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
-        $row++;
+        $this->sheet->mergeCells("H36:I36");
+        $this->sheet->setCellValue("H36", $this->evaluasi->pejabatPenilai->nama);
+        $this->applyStyle("H36", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
 
-        // IDs matching Gambar 2 (A:C and F:H merged)
-        $this->sheet->mergeCells("A{$row}:C{$row}");
-        $this->sheet->setCellValue("A{$row}", 'NI PPPK ' . $this->evaluasi->pegawai->ni_pppk);
-        $this->applyStyle("A{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
+        // Baris 37: B37:D37 & H37:I37
+        $this->sheet->mergeCells("B37:D37");
+        $this->sheet->setCellValue("B37", 'NI PPPK ' . $this->evaluasi->pegawai->ni_pppk);
+        $this->applyStyle("B37", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
 
-        $this->sheet->mergeCells("F{$row}:H{$row}");
-        $this->sheet->setCellValue("F{$row}", 'NIP ' . $this->evaluasi->pejabatPenilai->nip);
-        $this->applyStyle("F{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
+        $this->sheet->mergeCells("H37:I37");
+        $this->sheet->setCellValue("H37", 'NIP ' . $this->evaluasi->pejabatPenilai->nip);
+        $this->applyStyle("H37", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
     }
 
     protected function applyHeaderStyle(string $range): void
