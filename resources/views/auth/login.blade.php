@@ -146,6 +146,18 @@
             <p>Sistem Evaluasi Kinerja Pegawai<br>Pemerintah Daerah Konoha</p>
         </div>
 
+        <!-- PROMOTIONAL INTERACTIVE PRESENTATION LINK -->
+        <a href="{{ route('presentation') }}" style="display: flex; align-items: center; justify-content: space-between; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);" onmouseover="this.style.transform='translateY(-2px)'; this.style.background='rgba(99, 102, 241, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.background='rgba(99, 102, 241, 0.15)';">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 1.2rem;">✨</span>
+                <div style="text-align: left;">
+                    <h4 style="margin: 0; font-size: 0.85rem; font-weight: 700; color: #fff;">Presentasi Interaktif EVAKIN</h4>
+                    <p style="margin: 0; font-size: 0.75rem; color: #cbd5e1;">Lihat demo & detail fitur tanpa login</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color: #818cf8; font-size: 0.8rem;"></i>
+        </a>
+
         <div class="login-card">
             <form action="{{ route('login') }}" method="POST">
                 @csrf

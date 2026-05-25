@@ -20,6 +20,12 @@ Route::post('/install', [InstallController::class, 'setup'])->name('install.setu
 
 Route::middleware([\App\Http\Middleware\CheckInstalled::class])->group(function() {
 
+// ==========================================
+// PRESENTATION ROUTE
+// ==========================================
+Route::get('/presentasi', function () {
+    return view('presentation');
+})->name('presentation');
 
 // ==========================================
 // AUTH ROUTES
