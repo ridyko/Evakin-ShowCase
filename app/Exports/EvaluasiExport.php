@@ -53,9 +53,9 @@ class EvaluasiExport
         $this->sheet->getColumnDimension('D')->setWidth(15);  // Value Pegawai part 2 / Target tahunan
         $this->sheet->getColumnDimension('E')->setWidth(15);  // NO Penilai / Target Bulan
         $this->sheet->getColumnDimension('F')->setWidth(20);  // Key Penilai (NAMA, NIP, dll) / Realisasi
-        $this->sheet->getColumnDimension('G')->setWidth(5);   // Separator / Predikat part 1
-        $this->sheet->getColumnDimension('H')->setWidth(20);  // Value Penilai part 1 / Predikat part 2 / Capaian part 1
-        $this->sheet->getColumnDimension('I')->setWidth(10);  // Value Penilai part 2 / Nilai Score / Capaian part 2
+        $this->sheet->getColumnDimension('G')->setWidth(18);  // Value Penilai part 1 / Predikat part 1
+        $this->sheet->getColumnDimension('H')->setWidth(18);  // Value Penilai part 2 / Predikat part 2 / Capaian part 1
+        $this->sheet->getColumnDimension('I')->setWidth(10);  // Value Penilai part 3 / Nilai Score / Capaian part 2
 
         $this->writeHeader();
         $this->writeIdentity();
@@ -110,8 +110,7 @@ class EvaluasiExport
         $this->sheet->setCellValue("F5", 'PEJABAT PENILAI KINERJA');
 
         $this->applyHeaderStyle("A5:D5");
-        $this->applyHeaderStyle("E5:F5");
-        $this->applyHeaderStyle("H5:I5");
+        $this->applyHeaderStyle("E5:I5");
 
         $leftData = [
             ['1', 'NAMA', strtoupper($pegawai->nama)],
@@ -129,7 +128,7 @@ class EvaluasiExport
             ['5', 'UNIT KERJA', strtoupper($penilai->unit_kerja)],
         ];
 
-        // Baris 6-10: Identity Data
+        // Baris 6-10: Identity Data (Pejabat values merged G:I)
         for ($i = 0; $i < 5; $i++) {
             $r = 6 + $i;
             
@@ -144,10 +143,9 @@ class EvaluasiExport
             // Right Side (Pejabat)
             $this->sheet->setCellValue("E{$r}", $rightData[$i][0]);
             $this->sheet->setCellValue("F{$r}", $rightData[$i][1]);
-            $this->sheet->mergeCells("H{$r}:I{$r}");
-            $this->sheet->setCellValue("H{$r}", $rightData[$i][2]);
-            $this->applyBorder("E{$r}:F{$r}");
-            $this->applyBorder("H{$r}:I{$r}");
+            $this->sheet->mergeCells("G{$r}:I{$r}");
+            $this->sheet->setCellValue("G{$r}", $rightData[$i][2]);
+            $this->applyBorder("E{$r}:I{$r}");
             $this->applyStyle("E{$r}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]]);
         }
     }
@@ -276,37 +274,37 @@ class EvaluasiExport
             $tanggalText = 'Jakarta, ' . date('d') . ' ' . $bulanNames[(int)date('n')] . ' ' . $this->evaluasi->tahun;
         }
 
-        // Baris 31 Kolom H (Merge H31:I31)
-        $this->sheet->mergeCells("H31:I31");
-        $this->sheet->setCellValue("H31", $tanggalText);
-        $this->applyStyle("H31", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
+        // Baris 31 Kolom H (Merge G31:I31)
+        $this->sheet->mergeCells("G31:I31");
+        $this->sheet->setCellValue("G31", $tanggalText);
+        $this->applyStyle("G31", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
 
-        // Baris 32: B32:D32 & H32:I32
+        // Baris 32: B32:D32 & G32:I32
         $this->sheet->mergeCells("B32:D32");
         $this->sheet->setCellValue("B32", 'Pegawai yang Dinilai');
         $this->applyStyle("B32", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
 
-        $this->sheet->mergeCells("H32:I32");
-        $this->sheet->setCellValue("H32", 'Pejabat Penilai Kinerja,');
-        $this->applyStyle("H32", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
+        $this->sheet->mergeCells("G32:I32");
+        $this->sheet->setCellValue("G32", 'Pejabat Penilai Kinerja,');
+        $this->applyStyle("G32", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
 
-        // Baris 36: B36:D36 & H36:I36
+        // Baris 36: B36:D36 & G36:I36
         $this->sheet->mergeCells("B36:D36");
         $this->sheet->setCellValue("B36", $this->evaluasi->pegawai->nama);
         $this->applyStyle("B36", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
 
-        $this->sheet->mergeCells("H36:I36");
-        $this->sheet->setCellValue("H36", $this->evaluasi->pejabatPenilai->nama);
-        $this->applyStyle("H36", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
+        $this->sheet->mergeCells("G36:I36");
+        $this->sheet->setCellValue("G36", $this->evaluasi->pejabatPenilai->nama);
+        $this->applyStyle("G36", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['bold' => true]]);
 
-        // Baris 37: B37:D37 & H37:I37
+        // Baris 37: B37:D37 & G37:I37
         $this->sheet->mergeCells("B37:D37");
         $this->sheet->setCellValue("B37", 'NI PPPK ' . $this->evaluasi->pegawai->ni_pppk);
         $this->applyStyle("B37", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
 
-        $this->sheet->mergeCells("H37:I37");
-        $this->sheet->setCellValue("H37", 'NIP ' . $this->evaluasi->pejabatPenilai->nip);
-        $this->applyStyle("H37", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
+        $this->sheet->mergeCells("G37:I37");
+        $this->sheet->setCellValue("G37", 'NIP ' . $this->evaluasi->pejabatPenilai->nip);
+        $this->applyStyle("G37", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
     }
 
     protected function applyHeaderStyle(string $range): void
