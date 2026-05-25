@@ -168,10 +168,9 @@ class EvaluasiExport
         $this->sheet->setCellValue("F{$row}", 'Realisasi');
         $this->sheet->setCellValue("G{$row}", 'Capaian');
 
-        $this->applyBorder("A{$row}:G{$row}");
+        $this->applyHeaderStyle("A{$row}:G{$row}");
         $this->applyStyle("A{$row}:G{$row}", [
-            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true],
-            'font' => ['bold' => true, 'size' => 8]
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true]
         ]);
         $row++;
 
@@ -215,10 +214,9 @@ class EvaluasiExport
         $this->sheet->mergeCells("F{$row}:G{$row}");
         $this->sheet->setCellValue("F{$row}", 'Nilai');
 
-        $this->applyBorder("A{$row}:G{$row}");
+        $this->applyHeaderStyle("A{$row}:G{$row}");
         $this->applyStyle("A{$row}:G{$row}", [
-            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-            'font' => ['bold' => true, 'size' => 8]
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
         ]);
         $row++;
 
@@ -265,7 +263,7 @@ class EvaluasiExport
 
         $this->sheet->mergeCells("E{$row}:G{$row}");
         $this->sheet->setCellValue("E{$row}", $tanggalText);
-        $this->applyStyle("E{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_RIGHT], 'font' => ['size' => 8]]);
+        $this->applyStyle("E{$row}", ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER], 'font' => ['size' => 8]]);
         $row++;
 
         $this->sheet->mergeCells("A{$row}:C{$row}");
